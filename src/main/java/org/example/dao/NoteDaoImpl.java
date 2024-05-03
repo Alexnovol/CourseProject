@@ -1,7 +1,6 @@
 package org.example.dao;
 
 import lombok.Getter;
-import org.example.dbnotes.DbNotes;
 import org.example.model.Note;
 
 import java.util.ArrayList;
@@ -9,21 +8,21 @@ import java.util.List;
 
 public class NoteDaoImpl implements NoteDao {
     @Getter
-    private static final DbNotes dbNotes = new DbNotes();
+    private List<Note> notes = new ArrayList<>();
+    private final Note noteGen = new Note();
 
     @Override
     public void createNote(String text, String[] labels) {
         Note note = new Note();
-        note.setId(dbNotes.getId());
+        note.setId(noteGen.genId());
         note.setText(text);
         note.setLabels(labels);
-        dbNotes.getNotes().add(note);
+        notes.add(note);
     }
 
     @Override
     public String getAllNotes() {
         StringBuilder sb = new StringBuilder();
-        List<Note> notes = dbNotes.getNotes();
         for (Note note : notes) {
             sb.append(note.getId()).append("#").append(note.getText()).append("\n");
             String[] labels = note.getLabels();
@@ -45,12 +44,11 @@ public class NoteDaoImpl implements NoteDao {
     @Override
     public boolean removeNoteById(String id) {
         int numId = Integer.parseInt(id);
-        List<Note> notes = dbNotes.getNotes();
         List<Note> notesFiltered = new ArrayList<>(notes.stream().filter(note -> note.getId() != numId).toList());
         if (notes.size() == notesFiltered.size()) {
             return false;
         } else {
-            dbNotes.setNotes(notesFiltered);
+            notes = notesFiltered;
             return true;
         }
     }

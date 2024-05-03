@@ -1,26 +1,20 @@
 package service;
 
-import org.example.dao.NoteDaoImpl;
-import org.example.dbnotes.DbNotes;
 import org.example.service.NoteServiceImpl;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NoteServiceImplTest {
+    @Spy
+    private NoteServiceImpl noteService;
 
-    private final NoteServiceImpl noteService = new NoteServiceImpl();
-    private final DbNotes dbNotes = NoteDaoImpl.getDbNotes();
-
-
-    @AfterEach
-    public void clearDb() {
-        dbNotes.setNotes(new ArrayList<>());
-        dbNotes.setId(0);
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
 
